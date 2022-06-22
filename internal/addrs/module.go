@@ -30,14 +30,24 @@ func (m Module) IsRoot() bool {
 }
 
 func (m Module) String() string {
-	if len(m) == 0 {
-		return ""
-	}
-	var steps []string
-	for _, s := range m {
-		steps = append(steps, "module", s)
-	}
-	return strings.Join(steps, ".")
+        if len(m) == 0 {
+                return ""
+        }
+        size := 0
+        for _, s := range m {
+            size += len(s)
+        }
+  	var sb strings.Builder
+  	// 8 is len("module.") + len(".")
+  	sb.Grow(8*len(m) + size)
+        for i, s := range m {
+        	sb.WriteString("module.")
+        	sb.WriteString(s)
+            	if i != len(m)-1 {
+                	sb.WriteString(".")
+            	}
+        }
+        return sb.String()
 }
 
 func (m Module) Equal(other Module) bool {
